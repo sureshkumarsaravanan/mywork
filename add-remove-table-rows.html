@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add / Remove Table Rows</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="http://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <style type="text/css">
+            .button-container { text-align: center; margin-top: 20px; clear: both;}
+            .tg  {border-collapse:collapse;border-spacing:0;}
+            .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+            .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+        </style>
+        <script type="text/javascript">// <![CDATA[
+
+            var $j = jQuery.noConflict();
+
+            // inserting new row
+            var insertNewRow = function ()
+            {
+                var table = document.getElementById('userentry-form');
+                var columnCount = table.rows[0].cells.length;
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+
+                for (i = 0; i < columnCount; i++) {
+                    row.insertCell(i).innerHTML = table.rows[1].cells[i].innerHTML;
+                }
+                //Change the value of the checkbox
+                $j(".tab-checkbox:last").val($j(".tab-checkbox").length);
+            };
+            // delete row(s)
+            var deleteRow = function ()
+            {
+                $j(".tab-checkbox").each(function () {
+                    // Delete only chosen rows
+                    if ($j(this).is(':checked') === true) {
+                        // Delete row
+                        var rowNumber = $j(this).val();
+                        var rowCount = document.getElementById('userentry-form').rows.length;
+
+                        try {
+                            if (rowNumber && rowCount > 2) { // At least one row should be there
+                                document.getElementById("userentry-form").deleteRow(rowNumber);
+                            } else {
+                                alert('Table should have at least one row');
+                            }
+                        } catch (exception) {
+                            console.log(exception);
+                        }
+                    }
+                });
+                // re arrange checkbox values as some row(s) got added / deleted
+                $j(".tab-checkbox").each(function (index) {
+                    $j(".tab-checkbox:last").val(index + 1);
+                });
+            };
+// ]]></script>
+    </head>
+    <body>
+        <table id="userentry-form" class="tg">
+            <tr>
+                <th style="width:20%;">First Name</th>
+                <th style="width:20%;">Last Name</th>
+                <th style="width:25%;">Email</th>
+                <th style="width:5%;">Age</th>
+                <th style="width:20%;">Address</th>
+                <th style="width:10%;">Delete</th>
+            </tr>
+            <tr>
+                <td><input type="text" /></td>
+                <td><input type="text" /></td>
+                <td><input type="text" /></td>
+                <td><input type='text' /></td>
+                <td><input type="text" /></td>
+                <td><input class="tab-checkbox" type="checkbox" value="1" /></td>
+            </tr>
+        </table>
+        <div class="button-container">
+            <input type="button" value="Add Row" onclick="insertNewRow();" />
+            <input type="button" value="Delete Row" onclick="deleteRow();" />
+        </div>
+    </body>
+</html>
